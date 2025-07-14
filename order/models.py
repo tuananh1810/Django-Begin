@@ -18,6 +18,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=PROTECT)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)  # đơn giá
+    discount = models.FloatField(default=0, blank=True)
 
     def __str__(self):
         return f"{self.order.code} - {self.product.code}"

@@ -17,7 +17,7 @@ class OrderListCreateView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = OrderSerializer(data=request.data)
+        serializer = OrderSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()  # thêm created_by=request.user nếu cần
             return Response(serializer.data, status=status.HTTP_201_CREATED)

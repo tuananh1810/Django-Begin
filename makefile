@@ -1,7 +1,11 @@
-.\env\Scripts\Activate.ps1   	  (kích hoạt môi trg ảo)
-python manage.py makemigrations 		(chạy khi sửa models)
-python manage.py migrate 		(chạy khi sửa models)
+(kích hoạt môi trg ảo)
+.\env\Scripts\Activate.ps1   	  
+(chạy khi sửa models)
+python manage.py makemigrations 		
+python manage.py migrate 
+(runserver)		
 python manage.py runserver 
-python manage.py shell 			(check admin)  
-from django.contrib.auth.models import User			 (check admin)
+(check admin) 
+python manage.py shell 			 
+from django.contrib.auth.models import User			 
 User.objects.all()		 (check admin)  exit()

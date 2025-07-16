@@ -5,7 +5,9 @@ from rest_framework import status
 from ..models import Order, OrderItem
 from ..serializers import OrderSerializer, OrderItemSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from django.utils.timezone import localtime
 
 # ----------- ORDER -------------
 class OrderListCreateView(APIView):
@@ -19,7 +21,30 @@ class OrderListCreateView(APIView):
     def post(self, request):
         serializer = OrderSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            serializer.save()  # thêm created_by=request.user nếu cần
+            order_instance = serializer.save()  # tạo order
+            # gửi mail nếu có email
+            if order_instance.customer.email:
+                # Lấy các item thuộc đơn
+                order_items = OrderItem.objects.filter(order=order_instance)
+                serializer_items = OrderItemSerializer(order_items, many=True)
+
+                time_created = localtime(order_instance.created_at).strftime("Ngày %d Tháng %m Năm %Y %H:%M:%S")
+                context = {
+                    "order": order_instance,
+                    "order_items": serializer_items.data,
+                    "time_created": time_created,
+                    "customer": order_instance.customer,
+                }
+
+                subject = f"Xác nhận đơn hàng {order_instance.code}"
+                html_content = render_to_string("template_order_online.html", context)
+                text_content = f"Đơn hàng {order_instance.code} đã được tạo. Tổng tiền: {order_instance.total}đ"
+
+                email = EmailMultiAlternatives(subject, text_content, None, [order_instance.customer.email])
+                email.attach_alternative(html_content, "text/html")
+                email.send()
+
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

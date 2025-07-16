@@ -58,10 +58,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'tutorial.urls'
 
+import os
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'html')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

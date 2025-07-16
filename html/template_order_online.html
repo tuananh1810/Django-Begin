@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông báo đơn hàng</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 14px; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 6px; text-align: left; }
+        th { background-color: #f8f8f8; }
+        .total { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>🧾 Đơn hàng mới từ cửa hàng</h2>
+
+    <p>Xin chào <strong>{{ customer.name }}</strong>,</p>
+    <p>Đơn hàng <strong>{{ order.code }}</strong> đã được tạo vào lúc <strong>{{ time_created }}</strong>.</p>
+
+    <h3>Chi tiết đơn hàng:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Giảm giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order_items %}
+            <tr>
+                <td>{{ item.product_detail.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}đ</td>
+                <td>{{ item.discount }}đ</td>
+                <td>{{ item.quantity|floatformat:0|add:""|add:item.price|floatformat:0 }}đ</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p class="total">Tổng cộng: {{ order.total }}đ</p>
+
+    <p>Cảm ơn bạn đã mua hàng!</p>
+    <p><strong>Đội ngũ cửa hàng</strong></p>
+</body>
+</html>

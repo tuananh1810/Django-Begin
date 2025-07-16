@@ -4,8 +4,6 @@ from product.models import Product
 from customer.models import Customer
 from decimal import Decimal
 import uuid
-from django.core.mail import send_mail
-
 
 # Trả về đầy đủ thông tin Product
 class ProductDetailSerializer(serializers.ModelSerializer):
@@ -70,22 +68,7 @@ class OrderSerializer(serializers.ModelSerializer):
         order.total = total
         order.save()
 
-        # Gửi email xác nhận đơn hàng cho khách hàng
-        customer = order.customer
-        subject = 'Đặt hàng thành công'
-        message = f"""\
-Xin chào {customer.name},
-Mã đơn hàng: {order.code}
-Tổng tiền: {order.total} VND
-
-"""
-        send_mail(
-            subject,
-            message,
-            None,  # Email người gửi
-            [customer.email],        # Gửi đến email khách hàng
-            fail_silently=False
-        )
+        
         
 
         return order
